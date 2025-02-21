@@ -1,0 +1,79 @@
+existing_schema = {
+    "database_type": "relational",
+    "version": "2.5",
+    "tables": {
+        "customers": {
+            "columns": [
+                {
+                    "name": "customer_id",
+                    "type": "varchar(36)",
+                    "primary_key": True,
+                    "nullable": False
+                },
+                {
+                    "name": "customer_type_cd",
+                    "type": "char(1)",
+                    "nullable": False,
+                    "valid_values": ["I", "C"]
+                },
+                {
+                    "name": "status_cd",
+                    "type": "char(1)",
+                    "nullable": False,
+                    "default": "A"
+                }
+            ],
+            "indexes": [
+                {
+                    "name": "pk_customers",
+                    "columns": ["customer_id"],
+                    "type": "primary"
+                }
+            ]
+        },
+        "accounts": {
+            "columns": [
+                {
+                    "name": "account_id",
+                    "type": "varchar(36)",
+                    "primary_key": True,
+                    "nullable": False
+                },
+                {
+                    "name": "customer_id",
+                    "type": "varchar(36)",
+                    "nullable": False,
+                    "foreign_key": {
+                        "table": "customers",
+                        "column": "customer_id"
+                    }
+                },
+                {
+                    "name": "account_type_cd",
+                    "type": "char(2)",
+                    "nullable": False,
+                    "valid_values": ["SA", "CA", "LA"]
+                }
+            ],
+            "indexes": [
+                {
+                    "name": "pk_accounts",
+                    "columns": ["account_id"],
+                    "type": "primary"
+                },
+                {
+                    "name": "fk_customer_account",
+                    "columns": ["customer_id"],
+                    "type": "foreign"
+                }
+            ]
+        }
+    },
+    "views": {
+        "active_customer_accounts": {
+            "base_tables": ["customers", "accounts"],
+            "join_conditions": ["customers.customer_id = accounts.customer_id"],
+            "filter_conditions": ["customers.status_cd = 'A'"]
+        }
+    }
+}

@@ -1,0 +1,55 @@
+datapedia_data = {
+    "entities": {
+        "customer": {
+            "definition": "An individual or organization that maintains a business relationship with the bank",
+            "attributes": {
+                "customer_id": {
+                    "type": "string",
+                    "description": "Unique identifier for the customer",
+                    "format": "UUID"
+                },
+                "customer_type": {
+                    "type": "string",
+                    "enum": ["individual", "corporate"],
+                    "description": "Type of customer"
+                }
+            },
+            "relationships": [
+                {
+                    "name": "accounts",
+                    "type": "has_many",
+                    "target": "account"
+                }
+            ],
+            "business_rules": [
+                "Customer must have at least one valid identification document",
+                "Corporate customers must provide registration documents"
+            ]
+        },
+        "account": {
+            "definition": "A financial account maintained by the customer",
+            "attributes": {
+                "account_number": {
+                    "type": "string",
+                    "description": "Unique account identifier",
+                    "pattern": "^[0-9]{10}$"
+                },
+                "account_type": {
+                    "type": "string",
+                    "enum": ["savings", "checking", "loan"],
+                    "description": "Type of account"
+                }
+            }
+        }
+    },
+    "domains": {
+        "retail_banking": {
+            "description": "Services for individual and small business customers",
+            "sub_domains": ["personal_banking", "small_business"]
+        },
+        "corporate_banking": {
+            "description": "Services for large corporate entities",
+            "sub_domains": ["trade_finance", "cash_management"]
+        }
+    }
+}
